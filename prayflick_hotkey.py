@@ -22,6 +22,8 @@ QUICK_PRAYER_BOUNDING_BOX = X1, Y1, X2, Y2
 prayer_on = False
 prayer_on_at = prayer_off_at = None
 
+print('loaded')
+
 while True:
 
     #    # determine state     #    #
@@ -35,8 +37,6 @@ while True:
     within_bounds = X1 <= cx <= X2 and Y1 <= cy <= Y2
 
     state_on = utils.on_off_state()
-
-
 
     #    # perform action     #    #
 
@@ -53,7 +53,9 @@ while True:
             x, y = utils.rand_inside(*QUICK_PRAYER_BOUNDING_BOX)
             pyautogui.moveTo(x, y)
 
-        utils.wait_and_click(0.05, 0.2)
+        # adjusted based on testing here
+        # http://instantclick.io/click-test
+        utils.wait_and_click(0.08, 0.15)
         prayer_on = True
 
     elif prayer_on and not state_on:
@@ -69,7 +71,9 @@ while True:
             x, y = utils.rand_inside(*QUICK_PRAYER_BOUNDING_BOX)
             pyautogui.moveTo(x, y)
 
-        utils.wait_and_click(0.02, 0.05)
+        # adjusted based on testing here
+        # http://instantclick.io/click-test
+        utils.wait_and_click(0.08, 0.15)
         prayer_on = False
 
     time.sleep(MICROTICK)
