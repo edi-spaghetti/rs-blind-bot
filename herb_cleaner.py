@@ -1,4 +1,5 @@
 
+import sys
 import time
 import random
 import pyautogui
@@ -7,10 +8,10 @@ import utils
 # Bank spot changes every time you move the camera so these are not really constants!
 # topleft Point(x=944, y=527)
 # bottom right Point(x=1043, y=649)
-BX1 = 944
-BY1 = 527
-BX2 = 1043
-BY2 = 649
+BX1 = int(sys.argv[1]) # 944
+BY1 = int(sys.argv[2]) # 527
+BX2 = int(sys.argv[3]) # 1043
+BY2 = int(sys.argv[4]) # 649
 
 # herb spot inside bank - also not necessarily constant!
 # Point(x=309, y=247)
