@@ -3,6 +3,12 @@ RUNELITE = True
 
 SIDEBAR_ON = True
 
+TICK = 0.6
+HALF_TICK = 0.3
+MICRO_TICK = 0.01
+
+DEFAULT_NPC_ATTACK_SPEED = 4  # default monster attack speed in game ticks
+
 if RUNELITE and SIDEBAR_ON:
     INVENTORY_X1 = 1231
     INVENTORY_Y1 = 576

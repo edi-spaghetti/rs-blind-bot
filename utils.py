@@ -5,6 +5,7 @@ import time
 import constants
 import numpy
 
+
 def map_between(value, start, stop):
     """
     Maps a value between start and stop
@@ -120,3 +121,37 @@ def move_to_index(n, normally=True):
     else:
         rx, ry = random_item_location(n)
         pyautogui.moveTo(rx, ry)
+
+
+class QuickPrayerButton:
+
+    def __init__(self, sidebar=True):
+
+        if sidebar:
+            self.cx = 1245
+            self.cy = 181
+            self.cw = 15
+
+            self.x1 = 1234
+            self.y1 = 169
+            self.x2 = 1258
+            self.y2 = 193
+        else:
+            raise NotImplementedError
+
+    def random_location(self, normal=True):
+        """
+        Returns a random location within the quick prayer box
+        """
+        if normal:
+            return distribute_normally(x1=self.x1, x2=self.x2, y1=self.y1, y2=self.y2)
+        else:
+            raise NotImplementedError
+
+
+def round_or_none(i, p=2):
+
+    try:
+        return round(i, p)
+    except TypeError:
+        return None
