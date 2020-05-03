@@ -155,3 +155,10 @@ def round_or_none(i, p=2):
         return round(i, p)
     except TypeError:
         return None
+
+
+def click_aoi(aoi):
+
+    x, y = distribute_normally(**aoi)
+    pyautogui.moveTo(x, y)
+    wait_and_click(0.08, 0.15)
