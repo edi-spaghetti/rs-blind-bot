@@ -4,6 +4,9 @@ import random
 import time
 import constants
 import numpy
+import keyboard
+import json
+import os
 
 
 def map_between(value, start, stop):
@@ -47,6 +50,8 @@ def wait_and_click(start, stop, click=True, key=None):
         pyautogui.mouseUp()
     elif key:
         pyautogui.keyUp(key)
+
+    return wait_period
 
 
 def on_off_state():
@@ -162,3 +167,40 @@ def click_aoi(aoi):
     x, y = distribute_normally(**aoi)
     pyautogui.moveTo(x, y)
     wait_and_click(0.08, 0.15)
+
+
+if __name__ == '__main__':
+
+    aoi_count = 0
+    aoi = {}
+    tl_done = False
+    br_done = False
+    tl = br = None
+
+    while True:
+
+        if keyboard.is_pressed('y') and not tl_done:
+            tl = pyautogui.position()
+            tl_done = True
+
+        if keyboard.is_pressed('u') and not br_done:
+            br = pyautogui.position()
+            br_done = True
+
+        if tl_done and br_done:
+
+            # add another
+            if keyboard.is_pressed('i'):
+                aoi[str(aoi_count)] = {"x1": tl.x, "y1": tl.y, "x2": br.x, "y2": br.y}
+                tl_done = br_done = False
+                aoi_count += 1
+
+            # finish here
+            if keyboard.is_pressed('o'):
+                aoi[str(aoi_count)] = {"x1": tl.x, "y1": tl.y, "x2": br.x, "y2": br.y}
+                break
+
+        time.sleep(0.05)
+
+    with open(os.path.join(os.path.dirname(__file__), 'data', 'aoi.json'), 'w') as f:
+        json.dump(aoi, f)
