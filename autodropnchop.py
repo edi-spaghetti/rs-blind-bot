@@ -11,31 +11,18 @@ loop = list(range(0, 27, 4)) + list(range(25, 0, -4)) + list(range(2, 27, 4)) + 
 EXIT_KEY = 'p'
 
 # dictionary of areas of interest
-willows = {
-    'left': {
-        'x1': 595,
-        'y1': 460,
-        'x2': 726,
-        'y2': 552
-    },
-    'right': {
-        'x1': 837,
-        'y1': 451,
+willows = utils.get_aoi()
 
-        'x2': 959,
-        'y2': 543
-    },
-}
 
 while True:
 
     if keyboard.is_pressed('j'):
 
-        utils.click_aoi(willows['left'])
+        utils.click_aoi(willows['0'])
 
     elif keyboard.is_pressed('k'):
 
-        utils.click_aoi(willows['right'])
+        utils.click_aoi(willows['1'])
 
     elif keyboard.is_pressed('l'):
 
@@ -52,7 +39,7 @@ while True:
                 exit(1)
 
             utils.move_to_index(i)
-            utils.wait_and_click(0.05, 0.08)
+            utils.wait_and_click(0.015, 0.03
             # utils.wait_and_click(0.01, 0.1, click=False)
 
         # lift up shift
