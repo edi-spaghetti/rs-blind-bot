@@ -28,3 +28,7 @@ if RUNELITE and SIDEBAR_ON:
 
     # inv#5 top left = Point(x=1231, y=630)
     INVENTORY_Y_GAP = 7
+
+# in seconds
+CLICK_SPEED_LOWER_BOUND = 0.08
+CLICK_SPEED_UPPER_BOUND = 0.15

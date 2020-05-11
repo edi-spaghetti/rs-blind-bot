@@ -2,11 +2,12 @@
 import pyautogui
 import random
 import time
-import constants
 import numpy
 import keyboard
 import json
 import os
+
+from qndnmz import constants
 
 
 def map_between(value, start, stop):
@@ -24,7 +25,7 @@ def map_between(value, start, stop):
     return (stop - start) * value + start
 
 
-def wait_and_click(start, stop, click=True, key=None):
+def wait_and_click(start, stop, click=True, key=None, right=False):
     """
     Waits and optional clicks in a timely manner
     :param start:
@@ -35,13 +36,15 @@ def wait_and_click(start, stop, click=True, key=None):
 
     wait_period = map_between(random.random(), start, stop)
 
-    if click and key:
-        raise NotImplementedError("Don't click the mouse and a key at the same time")
+    if sum([bool(p) for p in [click, key, right]]) > 1:
+        raise NotImplementedError("Don't do more than one action at the same time")
 
     if click:
         pyautogui.mouseDown()
     elif key:
         pyautogui.keyDown(key)
+    elif right:
+        pyautogui.mouseDown(button=pyautogui.RIGHT)
 
     print(f'waiting {wait_period}s')
     time.sleep(wait_period)
@@ -50,6 +53,16 @@ def wait_and_click(start, stop, click=True, key=None):
         pyautogui.mouseUp()
     elif key:
         pyautogui.keyUp(key)
+    elif right:
+        pyautogui.mouseUp(button=pyautogui.RIGHT)
+
+    return wait_period
+
+
+def wait(start, stop):
+
+    wait_period = map_between(random.random(), start, stop)
+    time.sleep(wait_period)
 
     return wait_period
 
@@ -163,44 +176,47 @@ def round_or_none(i, p=2):
 
 
 def click_aoi(aoi):
+    """
+    clicks an area of interst
+    :param aoi: dictionary of top left and bottom right
+                within which to click
+    :return: position clicked
+    """
 
     x, y = distribute_normally(**aoi)
     pyautogui.moveTo(x, y)
-    wait_and_click(0.08, 0.15)
+    wait_and_click(
+        constants.CLICK_SPEED_LOWER_BOUND,
+        constants.CLICK_SPEED_UPPER_BOUND
+    )
+
+    return x, y
 
 
-if __name__ == '__main__':
+def right_click_aoi(aoi):
+    """
+    right clicks an area of interst
+    :param aoi: dictionary of top left and bottom right
+                within which to click
+    :return: position clicked
+    """
+    x, y = distribute_normally(**aoi)
+    pyautogui.moveTo(x, y)
+    wait_and_click(
+        constants.CLICK_SPEED_LOWER_BOUND,
+        constants.CLICK_SPEED_UPPER_BOUND,
+        click=False, right=True
+    )
 
-    aoi_count = 0
-    aoi = {}
-    tl_done = False
-    br_done = False
-    tl = br = None
+    return x, y
 
-    while True:
 
-        if keyboard.is_pressed('y') and not tl_done:
-            tl = pyautogui.position()
-            tl_done = True
+def get_aoi():
 
-        if keyboard.is_pressed('u') and not br_done:
-            br = pyautogui.position()
-            br_done = True
-
-        if tl_done and br_done:
-
-            # add another
-            if keyboard.is_pressed('i'):
-                aoi[str(aoi_count)] = {"x1": tl.x, "y1": tl.y, "x2": br.x, "y2": br.y}
-                tl_done = br_done = False
-                aoi_count += 1
-
-            # finish here
-            if keyboard.is_pressed('o'):
-                aoi[str(aoi_count)] = {"x1": tl.x, "y1": tl.y, "x2": br.x, "y2": br.y}
-                break
-
-        time.sleep(0.05)
-
-    with open(os.path.join(os.path.dirname(__file__), 'data', 'aoi.json'), 'w') as f:
-        json.dump(aoi, f)
+    path = os.path.abspath(
+        os.path.join(
+            os.path.dirname(__file__), '..', 'data', 'aoi.json'
+        )
+    )
+    with open(path, 'r') as f:
+        return json.load(f)
