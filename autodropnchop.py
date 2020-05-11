@@ -39,7 +39,7 @@ while True:
                 exit(1)
 
             utils.move_to_index(i)
-            utils.wait_and_click(0.015, 0.03
+            utils.wait_and_click(0.015, 0.03)
             # utils.wait_and_click(0.01, 0.1, click=False)
 
         # lift up shift
