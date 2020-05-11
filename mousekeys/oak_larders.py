@@ -1,5 +1,6 @@
 
 import keyboard
+import pyautogui
 import time
 
 from ..utils import utils
@@ -46,20 +47,27 @@ class OakLarder:
 
         while True:
 
-            if keyboard.is_pressed('0'):
-                # do something
-                self.do_action()
-            elif keyboard.is_pressed('1'):
-                # butler left
-                self.click_butler(self.bleft)
-            elif keyboard.is_pressed('5'):
-                self.click_butler(self.bup)
-            elif keyboard.is_pressed('3'):
-                self.click_butler(self.bright)
-            elif keyboard.is_pressed('2'):
-                self.make_larder()
-            elif keyboard.is_pressed(self.exit):
-                exit(1)
+            # don't do anything if we're not on the game screen
+            # this usually happens because i forget to stop the script
+            # while i'm checking something
+            if pyautogui.position().x > 2880:
+
+                if keyboard.is_pressed('0'):
+                    # do something
+                    self.do_action()
+                elif keyboard.is_pressed('1'):
+                    # butler left
+                    self.click_butler(self.bleft)
+                elif keyboard.is_pressed('5'):
+                    self.click_butler(self.bup)
+                elif keyboard.is_pressed('3'):
+                    self.click_butler(self.bright)
+                elif keyboard.is_pressed('2'):
+                    self.make_larder()
+                elif keyboard.is_pressed(self.exit):
+                    exit(1)
+                else:
+                    time.sleep(0.01)
             else:
                 time.sleep(0.01)
 
@@ -75,17 +83,13 @@ class OakLarder:
         :return:
         """
 
-        if self.clicked_butler:
-            utils.wait_and_click(0.08, 0.15, click=False, key='space')
-
-        utils.click_aoi(aoi)
+        # if we haven't clicked him already, click him now
+        if not self.clicked_butler:
+            utils.click_aoi(aoi)
 
         if not self.clicked_butler:
             self.clicked_butler = True
         else:
-
-            # wait for dialogue to be open
-            utils.wait(0.9, 1.2)
 
             # send butler off to bank
             utils.wait_and_click(0.08, 0.15, click=False, key='1')
@@ -113,7 +117,8 @@ class OakLarder:
         utils.wait_and_click(0.08, 0.15, click=False, key='1')
 
         # wait for larder to be removed
-        utils.wait(1.2, 1.5)
+        time.sleep(1.2)
+        # utils.wait(1.2, 1.5)
 
         # right click the larder hot spot
         x, y = utils.right_click_aoi(self.larder)
@@ -126,7 +131,8 @@ class OakLarder:
         utils.click_aoi(bbox)
 
         # wait for build creation menu
-        utils.wait(0.9, 1.2)
+        time.sleep(0.9)
+        # utils.wait(0.9, 1.2)
 
         # press '2' to build an oak larder
         utils.wait_and_click(0.08, 0.15, click=False, key='2')
