@@ -116,6 +116,9 @@ class OakLarder:
         :return:
         """
 
+        # update so we can make minor adjustments without restarting
+        self.aoi = utils.get_aoi()
+
         aoi = self.butler_positions[position]
 
         # if we haven't clicked him already, click him now
@@ -138,6 +141,9 @@ class OakLarder:
             self.make_larder()
 
     def make_larder(self):
+
+        # update so we can make minor adjustments without restarting
+        self.aoi = utils.get_aoi()
 
         self.clicked_butler = False
         print('making oak larder')

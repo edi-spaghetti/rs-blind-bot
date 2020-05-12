@@ -3,8 +3,7 @@ Quick and Dirty Auto-Pray Clicker
 """
 
 import pyautogui
-import random
-from utils import map_between, wait_and_click
+from .utils.utils import wait_and_click
 import time
 
 # coords of rapid pray on runelite at full screen
