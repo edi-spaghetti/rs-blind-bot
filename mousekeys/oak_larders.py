@@ -37,7 +37,15 @@ class OakLarder:
         self.bup = self.aoi[self.BUTLER_UP_INDEX]
         self.bleft = self.aoi[self.BUTLER_LEFT_INDEX]
 
+        self.butler_positions = {
+            'left': self.bleft,
+            'up': self.bup,
+            'right': self.bright
+        }
+
         self.clicked_butler = False
+        self.current_butler_position = None
+        self.butler_actions = 0
 
         print('initialised')
 
@@ -54,14 +62,13 @@ class OakLarder:
 
                 if keyboard.is_pressed('0'):
                     # do something
-                    self.do_action()
+                    self.pay_butler()
                 elif keyboard.is_pressed('1'):
-                    # butler left
-                    self.click_butler(self.bleft)
+                    self.click_butler('left')
                 elif keyboard.is_pressed('5'):
-                    self.click_butler(self.bup)
+                    self.click_butler('up')
                 elif keyboard.is_pressed('3'):
-                    self.click_butler(self.bright)
+                    self.click_butler('right')
                 elif keyboard.is_pressed('2'):
                     self.make_larder()
                 elif keyboard.is_pressed(self.exit):
@@ -71,17 +78,45 @@ class OakLarder:
             else:
                 time.sleep(0.01)
 
-    def do_action(self):
-        pass
+    def pay_butler(self):
+        """
+        Pays the butler and resets
+        Can be launched separately in case script starts
+        halfway through some bank trips
+        :return:
+        """
 
-    def click_butler(self, aoi):
+        # listen to him moaning
+        utils.wait_and_click(0.1, 0.2, click=False, key='space')
+
+        # wait until he's finished
+        utils.wait(0.9, 1.1)
+
+        # pay the man/demon
+        utils.wait_and_click(0.1, 0.2, click=False, key='1')
+
+        # wait for his grubby hands to snatch up that dough
+        utils.wait(0.9, 1.1)
+
+        # roll your eyes at his eternal gratitude, and get him to do his job again
+        # fucking demonic ingrate
+        utils.wait_and_click(0.1, 0.2, click=False, key='space')
+
+        # back to work, swine!
+        self.make_larder()
+
+        self.butler_actions = 0
+
+    def click_butler(self, position):
         """
         Clicks butler at position within aoi
         First click will click once
         Second click will press 1 in dialogue
-        :param aoi: position butler is bound by
+        :param position: position butler is bound by
         :return:
         """
+
+        aoi = self.butler_positions[position]
 
         # if we haven't clicked him already, click him now
         if not self.clicked_butler:
@@ -89,10 +124,18 @@ class OakLarder:
 
         if not self.clicked_butler:
             self.clicked_butler = True
+            self.current_butler_position = position
         else:
 
             # send butler off to bank
             utils.wait_and_click(0.08, 0.15, click=False, key='1')
+
+            self.butler_actions += 1
+            print(f'dispatching butler on trip {self.butler_actions}')
+            self.current_butler_position = None
+
+            # make a new larder right away
+            self.make_larder()
 
     def make_larder(self):
 
@@ -110,14 +153,14 @@ class OakLarder:
         utils.click_aoi(bbox)
 
         # wait for dialogue to open
-        time.sleep(1.1)
+        time.sleep(0.9)
         # utils.wait(1.2, 1.5)
 
         # press '1' to remove
         utils.wait_and_click(0.08, 0.15, click=False, key='1')
 
         # wait for larder to be removed
-        time.sleep(1.2)
+        time.sleep(0.9)
         # utils.wait(1.2, 1.5)
 
         # right click the larder hot spot
@@ -131,11 +174,17 @@ class OakLarder:
         utils.click_aoi(bbox)
 
         # wait for build creation menu
-        time.sleep(0.9)
+        time.sleep(0.8)
         # utils.wait(0.9, 1.2)
 
         # press '2' to build an oak larder
         utils.wait_and_click(0.08, 0.15, click=False, key='2')
+
+        # wait for larder to be built
+        time.sleep(0.8)
+
+        if self.current_butler_position:
+            self.click_butler(self.current_butler_position)
 
     def calculate_remove_menu_offset(self, x, y):
         """
