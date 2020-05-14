@@ -89,6 +89,23 @@ def rand_inside(x1, y1, x2, y2):
     return rx, ry
 
 
+def move_to_aoi(x1=0, y1=0, x2=5780, y2=1800):
+
+    x, y = rand_inside(x1, y1, x2, y2)
+    pyautogui.moveTo(x, y)
+
+    return x, y
+
+
+def mouse_inside(x1=0, y1=0, x2=5780, y2=1800):
+
+    pos = pyautogui.position()
+    x = pos.x
+    y = pos.y
+
+    return x1 < x < x2 and y1 < y < y2
+
+
 def inventory_box_by_index(n):
 
     col = n % constants.SLOTS_HORIZONTAL
