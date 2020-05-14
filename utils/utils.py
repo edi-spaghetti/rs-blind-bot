@@ -46,7 +46,7 @@ def wait_and_click(start, stop, click=True, key=None, right=False):
     elif right:
         pyautogui.mouseDown(button=pyautogui.RIGHT)
 
-    print(f'waiting {wait_period}s')
+    # print(f'waiting {wait_period}s')
     time.sleep(wait_period)
 
     if click:
@@ -220,3 +220,18 @@ def get_aoi():
     )
     with open(path, 'r') as f:
         return json.load(f)
+
+
+def int_or_list(val):
+
+    try:
+        return int(val)
+    except ValueError:
+        try:
+            val = eval(val)
+            if isinstance(val, list):
+                return val
+            else:
+                raise ValueError
+        except:
+            raise ValueError
