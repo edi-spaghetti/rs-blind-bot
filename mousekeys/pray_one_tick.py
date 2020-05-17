@@ -44,14 +44,14 @@ class PrayOneTick:
                 if self.pray_on:
                     if pause > self.LONG_PAUSE:
                         clicked_at = time.time()
-                        utils.wait_and_click(0.08, 0.015)
+                        utils.wait_and_click(start=0.04, stop=0.09)
                         self.pray_on = False
                         flicks += 1
                         print(f'flick {flicks} off at {clicked_at} - paused ({round(pause, 4)})')
                 else:
                     if pause > 0:
                         clicked_at = time.time()
-                        utils.wait_and_click(0.08, 0.015)
+                        utils.wait_and_click(start=0.04, stop=0.09)
                         self.pray_on = True
                         print(f'flick {flicks} on at {clicked_at} - paused ({round(pause, 4)})')
 
@@ -61,7 +61,7 @@ class PrayOneTick:
                 if self.pray_on:
                     if not utils.mouse_inside(**self.qp):
                         utils.move_to_aoi(**self.qp)
-                    utils.wait_and_click(0.08, 0.015)
+                    utils.wait_and_click(start=0.04, stop=0.09)
 
                 # reset other variables
                 self.pray_on = False

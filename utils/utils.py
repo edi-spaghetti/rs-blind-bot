@@ -25,7 +25,13 @@ def map_between(value, start, stop):
     return (stop - start) * value + start
 
 
-def wait_and_click(start, stop, click=True, key=None, right=False):
+def wait_and_click(
+        start=constants.CLICK_SPEED_LOWER_BOUND,
+        stop=constants.CLICK_SPEED_UPPER_BOUND,
+        click=True,
+        key=None,
+        right=False
+):
     """
     Waits and optional clicks in a timely manner
     :param start:
