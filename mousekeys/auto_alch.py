@@ -3,6 +3,7 @@ import sys
 import time
 import keyboard
 import random
+import pyautogui
 
 from ..utils import utils
 from qndnmz import constants
@@ -13,21 +14,25 @@ class HighAlch:
     DONE = 0
 
     CASTING_SPEED = constants.TICK * 5
+    CAST_HOTKEY = 'c'
 
-    def __init__(self, repeat=-1, current_tab='MAGIC'):
+    def __init__(self, repeat=-1, current_tab='MAGIC', mode='auto'):
 
         # aoi should be overlap between high alc spell and inv 11
         self.aoi = utils.get_aoi()['0']
         self.repeats = repeat
         self.alched_at = None
         self.current_tab = current_tab
+        self.mode = mode
 
-        print('loaded')
+        print(f'loaded in {mode} mode')
 
     def run(self):
 
-        alchs_remaining = self.repeats
-        print('running')
+        if self.mode == 'auto':
+            self.auto_alch()
+        elif self.mode == 'hotkey':
+            self.hotkey_alch()
 
         # while True:
         #
@@ -43,6 +48,62 @@ class HighAlch:
         #         elif self.current_tab == 'MAGIC':
         #
         #
+
+    @property
+    def can_cast(self):
+        if self.alched_at is None:
+            return False
+        else:
+            return time.time() - self.alched_at > self.CASTING_SPEED
+
+    @property
+    def time_til_can_cast(self):
+        return max(0, (self.alched_at + self.CASTING_SPEED) - time.time())
+
+    def hotkey_alch(self):
+        """
+        Casts high alc on item in aoi assuming the magic page is already open
+        """
+        while True:
+
+            if utils.on_off_state():
+                if keyboard.is_pressed(self.CAST_HOTKEY):
+
+                    self.clean_print('casting')
+
+                    # get the original mouse position so we can jump back to it later
+                    pos = pyautogui.position()
+                    ox, oy = pos.x, pos.y
+
+                    # check if mouse is inside spell area
+                    if not utils.mouse_inside(**self.aoi):
+                        # move there if not
+                        utils.move_to_aoi(**self.aoi)
+
+                    # click the high alc spell
+                    select_wait = utils.wait_and_click()
+
+                    # wait for the menu to appear
+                    menu_wait = utils.map_between(random.random(), 0.05, 0.15)
+                    time.sleep(menu_wait)
+
+                    # cast the spell on the item
+                    self.alched_at = time.time()
+                    cast_wait = utils.wait_and_click()
+
+                    pyautogui.moveTo(ox, oy)
+
+                else:
+                    self.clean_print('sleeping')
+                    time.sleep(0.01)
+            else:
+                self.clean_print('disabled')
+                time.sleep(0.01)
+
+    def auto_alch(self):
+
+        print('running')
+        alchs_remaining = self.repeats
 
         if self.current_tab == 'INVENTORY':
             utils.wait_and_click(click=False, key='f')
@@ -87,18 +148,6 @@ class HighAlch:
             else:
                 self.clean_print(f'sleeping - {alchs_remaining} to go')
                 time.sleep(0.01)
-
-
-    @property
-    def can_cast(self):
-        if self.alched_at is None:
-            return False
-        else:
-            return time.time() - self.alched_at > self.CASTING_SPEED
-
-    @property
-    def time_til_can_cast(self):
-        return max(0, (self.alched_at + self.CASTING_SPEED) - time.time())
 
     def clean_print(self, statement, max=25):
         sys.stdout.write('\r')
