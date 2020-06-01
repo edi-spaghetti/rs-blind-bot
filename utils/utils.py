@@ -6,6 +6,7 @@ import numpy
 import keyboard
 import json
 import os
+import sys
 
 from qndnmz import constants
 
@@ -198,7 +199,7 @@ def round_or_none(i, p=2):
         return None
 
 
-def click_aoi(aoi):
+def click_aoi(aoi, speed=1):
     """
     clicks an area of interst
     :param aoi: dictionary of top left and bottom right
@@ -209,14 +210,14 @@ def click_aoi(aoi):
     x, y = distribute_normally(**aoi)
     pyautogui.moveTo(x, y)
     wait_and_click(
-        constants.CLICK_SPEED_LOWER_BOUND,
-        constants.CLICK_SPEED_UPPER_BOUND
+        constants.CLICK_SPEED_LOWER_BOUND * speed,
+        constants.CLICK_SPEED_UPPER_BOUND * speed
     )
 
     return x, y
 
 
-def right_click_aoi(aoi):
+def right_click_aoi(aoi, speed=1):
     """
     right clicks an area of interst
     :param aoi: dictionary of top left and bottom right
@@ -226,8 +227,8 @@ def right_click_aoi(aoi):
     x, y = distribute_normally(**aoi)
     pyautogui.moveTo(x, y)
     wait_and_click(
-        constants.CLICK_SPEED_LOWER_BOUND,
-        constants.CLICK_SPEED_UPPER_BOUND,
+        constants.CLICK_SPEED_LOWER_BOUND * speed,
+        constants.CLICK_SPEED_UPPER_BOUND * speed,
         click=False, right=True
     )
 
@@ -258,3 +259,10 @@ def int_or_list(val):
                 raise ValueError
         except:
             raise ValueError
+
+
+def clean_print(statement, max_=25):
+    sys.stdout.write('\r')
+    statement = statement + ' ' * (max_ - len(statement))
+    sys.stdout.write(statement)
+    sys.stdout.flush()
