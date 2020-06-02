@@ -113,7 +113,7 @@ class HighAlch:
         while alchs_remaining != 0:
 
             # caps lock acts as pause function
-            if not utils.on_off_state():
+            if utils.on_off_state():
 
                 # check if mouse is inside spell area
                 if not utils.mouse_inside(**self.aoi):
