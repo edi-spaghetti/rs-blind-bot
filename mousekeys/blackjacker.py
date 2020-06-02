@@ -19,8 +19,14 @@ class BlackJacker:
         }
     }
 
-    def __init__(self):
-        print('loaded')
+    def __init__(self, mode='hotkey'):
+        self.mode = mode
+        self.knockout_at = None
+        self.pickpocket_at = None
+        self.num_pockets_picked = 0
+        self.pos = None
+
+        print(f'loaded in {mode} mode')
 
     def run(self):
 
@@ -30,20 +36,12 @@ class BlackJacker:
 
             if utils.on_off_state():
 
-                if keyboard.is_pressed('c'):
-                    utils.clean_print('knocking out')
-                    self.do_action('knockout')
-                elif keyboard.is_pressed('v'):
-                    utils.clean_print('picking pocket')
-                    self.do_action('pickpocket')
-                elif keyboard.is_pressed('x'):
-                    utils.clean_print('knock picking')
-                    self.do_action('knockout')
-                    time.sleep(0.4)
-                    self.do_action('pickpocket')
+                if self.mode == 'hotkey':
+                    self.hotkey_blackjack()
+                elif self.mode == 'auto':
+                    self.auto_blackjack()
                 else:
-                    utils.clean_print('sleeping')
-                    time.sleep(0.01)
+                    raise NotImplementedError(f'invalid mode {self.mode}')
             else:
                 utils.clean_print('disabled')
                 time.sleep(0.01)
@@ -78,3 +76,38 @@ class BlackJacker:
             x2=self.OFFSET[item]['x2'] + x,
             y2=self.OFFSET[item]['y2'] + y
         )
+
+    def hotkey_blackjack(self):
+        if keyboard.is_pressed('c'):
+            utils.clean_print('knocking out')
+            self.do_action('knockout')
+        elif keyboard.is_pressed('v'):
+            utils.clean_print('picking pocket')
+            self.do_action('pickpocket')
+        elif keyboard.is_pressed('x'):
+            utils.clean_print('knock picking')
+            self.do_action('knockout')
+            time.sleep(0.4)
+            self.do_action('pickpocket')
+        else:
+            utils.clean_print('sleeping')
+            time.sleep(0.01)
+
+    def auto_blackjack(self):
+
+        if not self.knockout_at:
+            self.knockout_at = time.time()
+            self.do_action('knockout')
+            time.sleep(0.6)
+        else:
+            if time.time() > self.knockout_at + (1.2 * self.num_pockets_picked) + 1.2:
+                self.do_action('pickpocket')
+                self.num_pockets_picked += 1
+
+                # start again once we've done two
+                if self.num_pockets_picked == 2:
+                    self.knockout_at = None
+                    self.num_pockets_picked = 0
+                    time.sleep(1.2)
+            else:
+                utils.clean_print('waiting')
