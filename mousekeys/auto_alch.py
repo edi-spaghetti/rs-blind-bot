@@ -149,6 +149,10 @@ class HighAlch:
                 self.clean_print(f'sleeping - {alchs_remaining} to go')
                 time.sleep(0.01)
 
+        utils.clean_print('finished')
+        import winsound
+        winsound.Beep(1500, 500)
+
     def clean_print(self, statement, max=25):
         sys.stdout.write('\r')
         statement = statement + ' ' * (max - len(statement))

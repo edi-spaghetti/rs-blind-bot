@@ -1,0 +1,4 @@
+functions should be run from outside the package like so
+python -m qndnmz.autopray
+
+if the venv isn't mounted then you need to point to it directly
