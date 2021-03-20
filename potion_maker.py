@@ -16,13 +16,13 @@ def capture_bbox():
 
 
 aoi = {
-    'bank': {'bbox': {'x1': -1378, 'y1': 205, 'x2': -1268, 'y2': 378}, 'sleep': 0.6},
+    'bank': {'bbox': {'x1': 865, 'y1': 105, 'x2': 1110, 'y2': 316}, 'sleep': 0.6},
     'close_bank': {'sleep': 0.2, 'func': lambda: keyboard.press('esc')},
-    'bank_herb': {'bbox': {'x1': -1400, 'y1': 457, 'x2': -1377, 'y2': 479}, 'sleep': 0.3},
-    'bank_vial': {'bbox': {'x1': -1350, 'y1': 459, 'x2': -1328, 'y2': 481}, 'sleep': 0.3},
-    'deposit_all': {'bbox': {'x1': -1235, 'y1': 594, 'x2': -1210, 'y2': 617}, 'sleep': 0.5},
-    'inv_herb2': {'bbox': {'x1': -806, 'y1': 618, 'x2': -793, 'y2': 635}, 'sleep': 0.2},
-    'inv_vial': {'bbox': {'x1': -764, 'y1': 616, 'x2': -749, 'y2': 632}, 'sleep': 0.5},
+    'bank_herb': {'bbox': {'x1': 788, 'y1': 514, 'x2': 816, 'y2': 542}, 'sleep': 0.3},
+    'bank_vial': {'bbox': {'x1': 854, 'y1': 511, 'x2': 889, 'y2': 546}, 'sleep': 0.3},
+    'deposit_all': {'bbox': {'x1': 1027, 'y1': 717, 'x2': 1065, 'y2': 753}, 'sleep': 0.5},
+    'inv_herb2': {'bbox': {'x1': 1668, 'y1': 749, 'x2': 1695, 'y2': 772}, 'sleep': 0.2},
+    'inv_vial': {'bbox': {'x1': 1730, 'y1': 747, 'x2': 1758, 'y2': 776}, 'sleep': 0.5},
     'make_all': {'sleep': 9.5, 'func': lambda: keyboard.press('space')},
 }
 
